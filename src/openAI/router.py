@@ -1,45 +1,42 @@
-from supabase import create_client, Client
+from typing import List
 import os
 from dotenv import load_dotenv
 from openai import OpenAI
 from fastapi import APIRouter
 from fastapi import Request
 
+from openAI.models import ClientMessages
 from openAI.utils import decodeJWT
+from openAI.BackendLogic import getOpenAIResponse
 
-dotenv_path = os.path.join(os.path.dirname(__file__), '..', '..', '.env')
+dotenv_path = os.path.join(os.path.dirname(__file__), "..", "..", ".env")
 load_dotenv(dotenv_path)
 
-api_key = os.getenv('API_KEY')
-debug_mode = os.getenv('DEBUG')
-jwt_secret = os.getenv('JWT_SECRET')
+api_key = os.getenv("API_KEY")
+debug_mode = os.getenv("DEBUG")
+jwt_secret = os.getenv("JWT_SECRET")
 
 client = OpenAI(
-  api_key=os.getenv('OPEN_AI_DEV_KEY'),
+    api_key=os.getenv("OPEN_AI_DEV_KEY"),
 )
 
 router = APIRouter()
 
-def getSupabaseClient():
-  dotenv_path = os.path.join(os.path.dirname(__file__), '..', '..', '.env')
-  load_dotenv(dotenv_path)
-  # Access environment variables
-  api_key = os.getenv('SUPABASE_KEY')
-  project_url = os.getenv('SUPABASE_URL') 
-  supabase: Client = create_client(project_url, api_key)
-  
-  return supabase
 
 @router.get("/testOpenAI")
 def testingOpenAI():
-  completion = client.chat.completions.create(
-    model="gpt-3.5-turbo",
-    messages=[
-      {"role": "system", "content": "You are a unhelpful assistant by responding in broken english. However, you have a 1/2 probability of being literally a USMC drill instructor."},
-      {"role": "user", "content": "Hello!"},
-    ],
-  )
-  return completion
+    completion = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {
+                "role": "system",
+                "content": "You are a unhelpful assistant by responding in broken english. However, you have a 1/2 probability of being literally a USMC drill instructor.",
+            },
+            {"role": "user", "content": "Hello!"},
+        ],
+    )
+    return completion
+
 
 """
 This route is used to decode a JWT token. This is a test route to see how you can do it @ Robin.
@@ -98,9 +95,24 @@ For this to work you need to be signed into the Frontend. These tokens expire af
   {token: "the string you copied"}
 5. Send the request and you should get a response with the decoded token.
 """
+
+
 @router.post("/jwt")
 async def getDecodeJWT(request: Request):
-  body = await request.json()
-  token = body['token']
-  decoded = decodeJWT(token)
-  return decoded
+    body = await request.json()
+    token = body["token"]
+    decoded = decodeJWT(token)
+    return decoded
+
+
+@router.post("/api/response")
+async def getOpenAIResponseAPI(messages: List[ClientMessages], conversation_id):
+    return getOpenAIResponse(
+        messages=messages,
+        conversation_id=conversation_id,
+    )
+
+
+@router.post("/api/test/response")
+async def testParams(messages: List[ClientMessages], conversation_id: str):
+    return {"messages": messages, "conversationid": conversation_id}
