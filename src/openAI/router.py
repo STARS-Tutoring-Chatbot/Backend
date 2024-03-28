@@ -16,26 +16,37 @@ api_key = os.getenv("API_KEY")
 debug_mode = os.getenv("DEBUG")
 jwt_secret = os.getenv("JWT_SECRET")
 
-client = OpenAI(
-    api_key=os.getenv("OPEN_AI_DEV_KEY"),
-)
-
 router = APIRouter()
 
 
-@router.get("/testOpenAI")
-def testingOpenAI():
-    completion = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {
-                "role": "system",
-                "content": "You are a unhelpful assistant by responding in broken english. However, you have a 1/2 probability of being literally a USMC drill instructor.",
-            },
-            {"role": "user", "content": "Hello!"},
-        ],
+# This route is used to get a response from OpenAI. It takes in a list of messages and a conversation_id.
+@router.post("/api/response")
+async def getOpenAIResponseAPI(messages: List[ClientMessages], conversation_id):
+    return getOpenAIResponse(
+        messages=messages,
+        conversation_id=conversation_id,
     )
-    return completion
+
+
+@router.post("/api/extractor")
+async def postOpenAIExtractor():
+
+    return
+
+
+@DeprecationWarning  # This is a test route. Do not use
+@router.post("/api/test/response")
+async def testParams(messages: List[ClientMessages], conversation_id: str):
+    return {"messages": messages, "conversationid": conversation_id}
+
+
+@DeprecationWarning  # This is a test route. Do not use
+@router.post("/jwt")
+async def getDecodeJWT(request: Request):
+    body = await request.json()
+    token = body["token"]
+    decoded = decodeJWT(token)
+    return decoded
 
 
 """
@@ -95,24 +106,3 @@ For this to work you need to be signed into the Frontend. These tokens expire af
   {token: "the string you copied"}
 5. Send the request and you should get a response with the decoded token.
 """
-
-
-@router.post("/jwt")
-async def getDecodeJWT(request: Request):
-    body = await request.json()
-    token = body["token"]
-    decoded = decodeJWT(token)
-    return decoded
-
-
-@router.post("/api/response")
-async def getOpenAIResponseAPI(messages: List[ClientMessages], conversation_id):
-    return getOpenAIResponse(
-        messages=messages,
-        conversation_id=conversation_id,
-    )
-
-
-@router.post("/api/test/response")
-async def testParams(messages: List[ClientMessages], conversation_id: str):
-    return {"messages": messages, "conversationid": conversation_id}
