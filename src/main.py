@@ -3,11 +3,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 import openAI.router as openAI
-import extractor.router as extractorRouter
+import langchainAPI.router as langchain
 
 app = FastAPI()
 app.include_router(openAI.router)
-app.include_router(extractorRouter.router)
+app.include_router(langchain.router)
 origins = ["http://localhost:5173"]
 
 app.add_middleware(

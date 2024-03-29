@@ -30,7 +30,6 @@ async def getOpenAIResponseAPI(messages: List[ClientMessages], conversation_id):
 
 @router.post("/api/extractor")
 async def postOpenAIExtractor():
-
     return
 
 

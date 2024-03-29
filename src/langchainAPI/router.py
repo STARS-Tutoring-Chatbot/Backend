@@ -4,16 +4,15 @@ from dotenv import load_dotenv
 from fastapi import APIRouter
 from fastapi import Request
 
-from extractor.example_models import *
+from langchainAPI.example_models import *
 from langchain.output_parsers import PydanticOutputParser
 from langchain.prompts import PromptTemplate
 
-from langchain_core.prompts import ChatPromptTemplate
 from langchain.llms import OpenAI
 
 
 dotenv_path = os.path.join(os.path.dirname(__file__), "..", "..", "..", ".env")
-load_dotenv(dotenv_path)
+load_dotenv(dotenv_path)  #
 
 api_key = os.getenv("API_KEY")
 debug_mode = os.getenv("DEBUG")
