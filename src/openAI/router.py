@@ -21,22 +21,19 @@ router = APIRouter()
 
 # This route is used to get a response from OpenAI. It takes in a list of messages and a conversation_id.
 @router.post("/api/response")
-async def getOpenAIResponseAPI(messages: List[ClientMessages], conversation_id):
+async def getOpenAIResponseAPI(
+    messages: List[ClientMessages], conversation_id, model: str
+):
+
     return getOpenAIResponse(
-        messages=messages,
-        conversation_id=conversation_id,
+        messages=messages, conversation_id=conversation_id, model=model
     )
-
-
-@router.post("/api/extractor")
-async def postOpenAIExtractor():
-    return
 
 
 @DeprecationWarning  # This is a test route. Do not use
 @router.post("/api/test/response")
-async def testParams(messages: List[ClientMessages], conversation_id: str):
-    return {"messages": messages, "conversationid": conversation_id}
+async def testParams(messages: List[ClientMessages], conversation_id: str, model: str):
+    return {"messages": messages, "conversationid": conversation_id, "model": model}
 
 
 @DeprecationWarning  # This is a test route. Do not use

@@ -1,8 +1,8 @@
 import os
 from openai import OpenAI
-from typing import List, Dict, Union
+from typing import List
 from uuid import uuid4
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from openAI.models import ClientMessages
 
@@ -15,7 +15,9 @@ openai = OpenAI(
 )
 
 
-def getOpenAIResponse(messages: List[ClientMessages], conversation_id: str):
+def getOpenAIResponse(messages: List[ClientMessages], conversation_id: str, model: str):
+
+    print(model)
 
     strippedMessages = map(lambda x: {"role": x.role, "content": x.content}, messages)
     systemMessage = [
@@ -29,7 +31,7 @@ def getOpenAIResponse(messages: List[ClientMessages], conversation_id: str):
     allMessages = systemMessage + strippedMessages
     res = openai.chat.completions.create(
         messages=allMessages,  # type: ignore
-        model="gpt-3.5-turbo",
+        model=model.lower(),
         n=1,  # type: ignore
     )
 
