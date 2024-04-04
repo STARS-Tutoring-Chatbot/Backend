@@ -1,3 +1,4 @@
+import os
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -8,7 +9,10 @@ import langchainAPI.router as langchain
 app = FastAPI()
 app.include_router(openAI.router)
 app.include_router(langchain.router)
-origins = ["http://localhost:5173"]
+origins = [
+    "http://localhost:5173",
+    os.getenv("OPEN_AI_DEV_KEY"),
+]
 
 app.add_middleware(
     CORSMiddleware,
