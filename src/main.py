@@ -9,10 +9,7 @@ import langchainAPI.router as langchain
 app = FastAPI()
 app.include_router(openAI.router)
 app.include_router(langchain.router)
-origins = [
-    "http://localhost:5173",
-    os.getenv("OPEN_AI_DEV_KEY"),
-]
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
