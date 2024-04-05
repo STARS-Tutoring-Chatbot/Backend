@@ -27,10 +27,10 @@ class ChatChainSingleton:
     chain = None
     current_model = "gpt-4"
 
-    def __new__(self, cls, *args, **kwargs):
+    def __new__(cls, *args, **kwargs):
         if not cls._instance:
             cls._instance = super().__new__(cls)
-            cls.chain = cls.initialize_chain()
+            cls.chain = cls.initialize_chain(cls.current_model)
         return cls._instance
 
     @staticmethod
