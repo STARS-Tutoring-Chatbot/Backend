@@ -25,16 +25,16 @@ openai_api_key = os.getenv("OPEN_AI_DEV_KEY")
 class ChatChainSingleton:
     _instance = None
     chain = None
-    current_model = "gpt-4"
+    model = "gpt-4"
 
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
             cls._instance = super().__new__(cls)
-            cls.chain = cls.initialize_chain(cls.current_model)
+            cls.chain = cls.initialize_chain(cls.model)
         return cls._instance
 
     @staticmethod
-    def initialize_chain(model: str) -> Any:
+    def initialize_chain(model: str = "gpt-3.5-turbo") -> Any:
         examples = [
             {
                 "input": "What is a loop in Python?",
@@ -200,14 +200,19 @@ So the final answer is: For writing a recursive method to calculate the factoria
         )
 
         # Use OpenAI's GPT-4 model for the chat agent
-        chat_model = ChatOpenAI(model="gpt-4", temperature=0.0, api_key=openai_api_key)  # type: ignore
+        chat_model = ChatOpenAI(model=model, temperature=0.0, api_key=openai_api_key)  # type: ignore
 
         # Create the chain with the final prompt, the chat model, and the parser
         chain = final_prompt | chat_model
 
         return chain
 
+    @staticmethod
     def change_model(new_model: str):  # type: ignore
         ChatChainSingleton.model = new_model
         ChatChainSingleton.chain = ChatChainSingleton.initialize_chain(new_model)
         return ChatChainSingleton.chain
+
+    @staticmethod
+    def get_model():
+        return ChatChainSingleton.model
