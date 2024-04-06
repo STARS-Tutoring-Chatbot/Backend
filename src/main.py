@@ -4,11 +4,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 import openAI.router as openAI
-import langchainAPI.router as langchain
+import langchainAPI.router as langchainRouter
 
 app = FastAPI()
 app.include_router(openAI.router)
-app.include_router(langchain.router)
+app.include_router(langchainRouter.router)
 origins = ["*"]
 
 app.add_middleware(

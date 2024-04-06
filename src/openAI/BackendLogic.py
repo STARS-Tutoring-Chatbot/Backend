@@ -30,7 +30,7 @@ def getOpenAIResponse(messages: List[ClientMessages], conversation_id: str, mode
 
     allMessages = systemMessage + strippedMessages
     res = openai.chat.completions.create(
-        messages=allMessages,  # type: ignore
+        messages=allMessages,  # type: ignore USE CHAIN.INVOKE
         model=model.lower(),
         n=1,  # type: ignore
     )
