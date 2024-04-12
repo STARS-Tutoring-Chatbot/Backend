@@ -6,6 +6,8 @@ from datetime import datetime
 
 from openAI.models import ClientMessages
 
+from langchainAPI.router import chat_chain_instance
+
 supabase_key = os.getenv("VITE_SUPABASE_KEY")
 supabase_url = os.getenv("VITE_SUPABASE_URL")
 
@@ -29,11 +31,16 @@ def getOpenAIResponse(messages: List[ClientMessages], conversation_id: str, mode
     strippedMessages = list(strippedMessages)
 
     allMessages = systemMessage + strippedMessages
-    res = openai.chat.completions.create(
+
+    chat_chain_instance.initialize_chain(model)
+    chain = chat_chain_instance.chain
+    
+    res = chain.invoke({"input": allMessages}) # type: ignore
+    '''res = openai.chat.completions.create(
         messages=allMessages,  # type: ignore USE CHAIN.INVOKE
         model=model.lower(),
         n=1,  # type: ignore
-    )
+    )'''
 
     messageID = str(uuid4())
     metadataID = str(uuid4())
