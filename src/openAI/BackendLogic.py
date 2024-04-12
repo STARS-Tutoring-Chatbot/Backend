@@ -35,31 +35,25 @@ def getOpenAIResponse(messages: List[ClientMessages], conversation_id: str, mode
         n=1,  # type: ignore
     )
 
+    messageID = str(uuid4())
     metadataID = str(uuid4())
 
     time = (datetime.now()).replace(microsecond=0).isoformat()
 
-    all_messages = []  # empty list to store messages
-
-    # Iterate over each message in res.choices
-    for choice in res.choices:
-        messageID = str(uuid4())
-
-        message = {
-            "role": choice.message.role,
-            "content": choice.message.content,
-            "conversation_id": conversation_id,
-            "created_at": time,
-            "id": messageID,
-        }
-
-        all_messages.append(message)  # Add the message to the list
+    message = {
+        "role": res.choices[0].message.role,
+        "content": res.choices[0].message.content,
+        "conversation_id": conversation_id,
+        "created_at": time,
+        "id": messageID,
+    }
 
     metadata = {
         "chat_completion_id": res.id,
         "completion_tokens": res.usage.completion_tokens if res.usage else None,
         "created": time,
         "id": metadataID,
+        "message": messageID,
         "model": res.model,
         "prompt_tokens": res.usage.prompt_tokens if res.usage else None,
         "system_fingerprint": (
@@ -68,4 +62,4 @@ def getOpenAIResponse(messages: List[ClientMessages], conversation_id: str, mode
         "total_tokens": res.usage.total_tokens if res.usage else None,
     }
 
-    return {"messages": all_messages, "metadata": metadata}  # Return all messages and metadata
+    return {"message": message, "metadata": metadata}
