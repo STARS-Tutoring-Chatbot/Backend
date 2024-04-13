@@ -14,8 +14,6 @@ supabase_url = os.getenv("VITE_SUPABASE_URL")
 
 def getOpenAIResponse(messages: List[ClientMessages], conversation_id: str, model: str):
 
-    print(model)
-
     strippedMessages = map(lambda x: {"role": x.role, "content": x.content}, messages)
     systemMessage = [
         {
