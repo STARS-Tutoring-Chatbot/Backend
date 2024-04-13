@@ -26,7 +26,7 @@ openai_api_key = os.getenv("OPEN_AI_DEV_KEY")
 class ChatChainSingleton:
     _instance = None
     chain = None
-    model = "gpt-4"
+    model = "gpt-4-turbo"
 
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
