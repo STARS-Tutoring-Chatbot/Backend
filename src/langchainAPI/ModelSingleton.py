@@ -7,6 +7,7 @@ from langchain.prompts import (
     ChatPromptTemplate,
     FewShotChatMessagePromptTemplate,
     SemanticSimilarityExampleSelector,
+    MessagesPlaceholder,
 )
 from langchain_community.vectorstores import Chroma
 from langchain_openai import OpenAIEmbeddings
@@ -34,7 +35,7 @@ class ChatChainSingleton:
         return cls._instance
 
     @staticmethod
-    def initialize_chain(model: str = "gpt-3.5-turbo") -> Any:
+    def initialize_chain(model: str = "gpt-4") -> Any:
         examples = [
             {
                 "input": "What is a loop in Python?",
@@ -192,9 +193,10 @@ So the final answer is: For writing a recursive method to calculate the factoria
             [
                 (
                     "system",
-                    "You are a college level computer science tutor that helps students understand concepts. However, you do not solve assignments for students, or write code for them. You only assist them with learning concepts and debugging.",
+                    'You are a college level computer science tutor that helps students understand concepts. However, you do not solve assignments for students, or write code for them. You only assist them with learning concepts and debugging. Format your answers in markdown and if you need to use code, put it in a code block with backticks as such: ``` print("hello world!"). If you need to use equations, write it in latex format. For example: $$y = mx + b$$.',
                 ),
-                few_shot_prompt,
+                few_shot_prompt.format(),
+                MessagesPlaceholder(variable_name="history"),
                 ("human", "{input}"),
             ]
         )

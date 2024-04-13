@@ -1,8 +1,8 @@
 import os
-from openai import OpenAI
 from typing import List
 from uuid import uuid4
 from datetime import datetime
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
 from openAI.models import ClientMessages
 
@@ -10,11 +10,6 @@ from langchainAPI.router import chat_chain_instance
 
 supabase_key = os.getenv("VITE_SUPABASE_KEY")
 supabase_url = os.getenv("VITE_SUPABASE_URL")
-
-
-openai = OpenAI(
-    api_key=os.getenv("OPEN_AI_DEV_KEY"),
-)
 
 
 def getOpenAIResponse(messages: List[ClientMessages], conversation_id: str, model: str):
@@ -34,39 +29,79 @@ def getOpenAIResponse(messages: List[ClientMessages], conversation_id: str, mode
 
     chat_chain_instance.initialize_chain(model)
     chain = chat_chain_instance.chain
-    
-    res = chain.invoke({"input": allMessages}) # type: ignore
-    '''res = openai.chat.completions.create(
-        messages=allMessages,  # type: ignore USE CHAIN.INVOKE
-        model=model.lower(),
-        n=1,  # type: ignore
-    )'''
+    parsedMessages = parseMessages(allMessages)
+
+    res = chain.invoke({"input": parsedMessages[-1], "history": parsedMessages})  # type: ignore
+
+    # Old way
+    # res = openai.chat.completions.create(
+    #     messages=allMessages,  # type: ignore USE CHAIN.INVOKE
+    #     model=model.lower(),
+    #     n=1,  # type: ignore
+    # )
 
     messageID = str(uuid4())
-    metadataID = str(uuid4())
 
     time = (datetime.now()).replace(microsecond=0).isoformat()
 
+    parsedResponse = parse_chain_response(res)
+
     message = {
-        "role": res.choices[0].message.role,
-        "content": res.choices[0].message.content,
+        "role": "assistant",
+        "content": parsedResponse["content"],
         "conversation_id": conversation_id,
         "created_at": time,
         "id": messageID,
     }
 
     metadata = {
-        "chat_completion_id": res.id,
-        "completion_tokens": res.usage.completion_tokens if res.usage else None,
+        "chat_completion_id": parsedResponse["id"],
+        "completion_tokens": parsedResponse["completion_tokens"],
         "created": time,
-        "id": metadataID,
+        "id": parsedResponse["id"],
         "message": messageID,
-        "model": res.model,
-        "prompt_tokens": res.usage.prompt_tokens if res.usage else None,
-        "system_fingerprint": (
-            res.system_fingerprint if hasattr(res, "system_fingerprint") else None
-        ),
-        "total_tokens": res.usage.total_tokens if res.usage else None,
+        "model": parsedResponse["model"],
+        "prompt_tokens": parsedResponse["prompt_tokens"],
+        "system_fingerprint": None,
+        "total_tokens": parsedResponse["total_tokens"],
     }
 
     return {"message": message, "metadata": metadata}
+
+
+def parseMessages(messages):
+    finalMessages = []
+
+    for message in messages:
+        if message["role"] == "human":
+            finalMessages.append(HumanMessage(content=message["content"]))
+        elif message["role"] == "assistant":
+            finalMessages.append(AIMessage(content=message["content"]))
+        else:
+            finalMessages.append(SystemMessage(content=message["content"]))
+
+    return finalMessages
+
+
+def parse_chain_response(response: AIMessage):
+
+    content = response.content
+    metadata = response.response_metadata
+    tokenUsage = response.response_metadata.get("token_usage")
+    model = metadata["model_name"]
+    chat_id = response.id
+    metadataID = str(uuid4())  # change this
+    messageID = str(uuid4())  # change this
+
+    return {
+        "content": content,
+        "chat_completion_id": chat_id,
+        "completion_tokens": tokenUsage["completion_tokens"] if tokenUsage else None,
+        "created": (datetime.now()).replace(microsecond=0).isoformat(),
+        "id": metadataID,
+        "message": messageID,
+        "model": model,
+        "prompt_tokens": tokenUsage["prompt_tokens"] if tokenUsage else None,
+        "system_fingerprint": None,
+        "total_tokens": tokenUsage["total_tokens"] if tokenUsage else None,
+    }
