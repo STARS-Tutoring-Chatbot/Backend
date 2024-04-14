@@ -17,29 +17,29 @@ router = APIRouter()
 chat_chain_instance = ChatChainSingleton()
 
 
-# USE FOR TESTING
-@router.post("/langchain")
-def chat(message: str, model):
-    chat_chain_instance.change_model(model)
-    chain = chat_chain_instance.chain
-    return {"response": chain.invoke({"input": message})}  # type: ignore
+# # USE FOR TESTING
+# @router.post("/langchain")
+# def chat(message: str, model):
+#     chat_chain_instance.change_model(model)
+#     chain = chat_chain_instance.chain
+#     return {"response": chain.invoke({"input": message})}  # type: ignore
+
+
+# # USE FOR TESTING
+# @router.get("/testing/langchain")
+# def get_model():
+#     return {"model": chat_chain_instance.get_model()}  # type: ignore
+
+
+# # USE FOR TESTING
+# @router.get("/testing/langchain/change")
+# def change_model(model):
+#     chat_chain_instance.change_model(model)  # type: ignore
+#     return {"model": chat_chain_instance.get_model()}  # type: ignore
 
 
 # USE FOR TESTING
-@router.get("/langchain")
-def get_model():
-    return {"model": chat_chain_instance.get_model()}  # type: ignore
-
-
-# USE FOR TESTING
-@router.get("/langchain/change")
-def change_model(model):
-    chat_chain_instance.change_model(model)  # type: ignore
-    return {"model": chat_chain_instance.get_model()}  # type: ignore
-
-
-# USE FOR TESTING
-@router.get("/langchain/chain")
+@router.get("testing/langchain/chain")
 def chain_response():
 
     messages = [
@@ -79,9 +79,8 @@ def chain_response():
         "response": res,
     }
 
-
-@router.get("/langchain/openai")
-def chain_response_open_ai():
+    # @router.get("/langchain/openai")
+    # def chain_response_open_ai():
     res = openai.chat.completions.create(
         messages=[
             {"role": "system", "content": "Hello!"},
