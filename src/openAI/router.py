@@ -21,28 +21,26 @@ router = APIRouter()
 
 # This route is used to get a response from OpenAI. It takes in a list of messages and a conversation_id.
 @router.post("/api/response")
-async def getOpenAIResponseAPI(
-    messages: List[ClientMessages], conversation_id, model: str
-):
+async def getAPIResponse(messages: List[ClientMessages], conversation_id, model: str):
 
     return getOpenAIResponse(
         messages=messages, conversation_id=conversation_id, model=model
     )
 
 
-@DeprecationWarning  # This is a test route. Do not use
-@router.post("/api/test/response")
-async def testParams(messages: List[ClientMessages], conversation_id: str, model: str):
-    return {"messages": messages, "conversationid": conversation_id, "model": model}
+# @DeprecationWarning  # This is a test route. Do not use
+# @router.post("/api/test/response")
+# async def testParams(messages: List[ClientMessages], conversation_id: str, model: str):
+#     return {"messages": messages, "conversationid": conversation_id, "model": model}
 
 
-@DeprecationWarning  # This is a test route. Do not use
-@router.post("/jwt")
-async def getDecodeJWT(request: Request):
-    body = await request.json()
-    token = body["token"]
-    decoded = decodeJWT(token)
-    return decoded
+# @DeprecationWarning  # This is a test route. Do not use
+# @router.post("/jwt")
+# async def getDecodeJWT(request: Request):
+#     body = await request.json()
+#     token = body["token"]
+#     decoded = decodeJWT(token)
+#     return decoded
 
 
 """
