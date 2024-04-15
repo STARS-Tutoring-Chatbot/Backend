@@ -1,8 +1,8 @@
 from typing import List
 from fastapi import APIRouter
 
-from openAI.models import ClientMessages
-from openAI.BackendLogic import getOpenAIResponse
+from src.openAI.models import ClientMessages
+from src.openAI.BackendLogic import getOpenAIResponse
 
 router = APIRouter()
 

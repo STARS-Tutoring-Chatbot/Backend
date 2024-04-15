@@ -4,8 +4,8 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-import openAI.router as openAI
-import langchainAPI.router as langchainRouter
+import src.openAI.router as openAI
+import src.langchainAPI.router as langchainRouter
 
 app = FastAPI()
 app.include_router(openAI.router)

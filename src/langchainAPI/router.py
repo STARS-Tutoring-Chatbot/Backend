@@ -7,7 +7,7 @@ from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from langchain_community.vectorstores import Chroma
 from langchain_openai import OpenAIEmbeddings
 
-from langchainAPI.ModelSingleton import ChatChainSingleton
+from src.langchainAPI.ModelSingleton import ChatChainSingleton
 
 router = APIRouter()
 

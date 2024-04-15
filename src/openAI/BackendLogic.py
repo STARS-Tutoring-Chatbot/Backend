@@ -3,9 +3,9 @@ from uuid import uuid4
 from datetime import datetime
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
-from openAI.models import ClientMessages
+from src.openAI.models import ClientMessages
 
-from langchainAPI.router import chat_chain_instance
+from src.langchainAPI.router import chat_chain_instance
 
 
 def getOpenAIResponse(messages: List[ClientMessages], conversation_id: str, model: str):
