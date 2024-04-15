@@ -1,4 +1,3 @@
-import os
 from typing import List
 from uuid import uuid4
 from datetime import datetime
@@ -7,9 +6,6 @@ from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from openAI.models import ClientMessages
 
 from langchainAPI.router import chat_chain_instance
-
-supabase_key = os.getenv("VITE_SUPABASE_KEY")
-supabase_url = os.getenv("VITE_SUPABASE_URL")
 
 
 def getOpenAIResponse(messages: List[ClientMessages], conversation_id: str, model: str):

@@ -12,15 +12,9 @@ from langchain.prompts import (
 from langchain_community.vectorstores import Chroma
 from langchain_openai import OpenAIEmbeddings
 import os
-from dotenv import load_dotenv
 
-dotenv_path = os.path.join(os.path.dirname(__file__), "..", "..", "..", ".env")
-load_dotenv(dotenv_path)
 
-api_key = os.getenv("API_KEY")
-debug_mode = os.getenv("DEBUG")
-jwt_secret = os.getenv("JWT_SECRET")
-openai_api_key = os.getenv("OPEN_AI_DEV_KEY")
+openai_api_key = os.environ["OPEN_AI_DEV_KEY"]
 
 
 class ChatChainSingleton:

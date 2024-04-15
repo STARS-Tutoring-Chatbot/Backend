@@ -1,20 +1,8 @@
 from typing import List
-import os
-from dotenv import load_dotenv
-from openai import OpenAI
 from fastapi import APIRouter
-from fastapi import Request
 
 from openAI.models import ClientMessages
-from openAI.utils import decodeJWT
 from openAI.BackendLogic import getOpenAIResponse
-
-dotenv_path = os.path.join(os.path.dirname(__file__), "..", "..", ".env")
-load_dotenv(dotenv_path)
-
-api_key = os.getenv("API_KEY")
-debug_mode = os.getenv("DEBUG")
-jwt_secret = os.getenv("JWT_SECRET")
 
 router = APIRouter()
 

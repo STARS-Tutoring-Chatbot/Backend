@@ -6,9 +6,6 @@ from langchain_openai import ChatOpenAI
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from langchain_community.vectorstores import Chroma
 from langchain_openai import OpenAIEmbeddings
-import os
-from dotenv import load_dotenv
-from openai import OpenAI
 
 from langchainAPI.ModelSingleton import ChatChainSingleton
 
