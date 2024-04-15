@@ -39,7 +39,7 @@ chat_chain_instance = ChatChainSingleton()
 
 
 # USE FOR TESTING
-@router.get("testing/langchain/chain")
+@router.get("/testing/langchain/chain")
 def chain_response():
 
     messages = [
@@ -77,21 +77,6 @@ def chain_response():
 
     return {
         "response": res,
-    }
-
-    # @router.get("/langchain/openai")
-    # def chain_response_open_ai():
-    res = openai.chat.completions.create(
-        messages=[
-            {"role": "system", "content": "Hello!"},
-        ],  # type: ignore USE CHAIN.INVOKE
-        model="gpt-4",
-        n=1,  # type: ignore
-    )
-
-    return {
-        "response": res,
-        "type": type(res),
     }
 
 
